@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const PORT = 8080
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 // routes
 const postRouter = require('./src/routes/post.router')
@@ -14,8 +15,10 @@ app.use(
   })
 )
 
+app.use(cors())
+
 app.use(bodyParser.json())
-app.use('/posts', postRouter)
+app.use('/api/posts', postRouter)
 
 app.listen(PORT, () => {
   console.log(`server listening on ${PORT}`)

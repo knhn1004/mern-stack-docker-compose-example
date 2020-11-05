@@ -1,11 +1,12 @@
-FROM node:10.16-alpine
+FROM node:14-slim
 
 EXPOSE 8080
 WORKDIR /usr/src/app
 
-COPY package*.json yarn.lock ./
+COPY package.json ./
+COPY ./yarn.lock ./
 
-RUN yarn
+RUN yarn install
 
 COPY . .
 

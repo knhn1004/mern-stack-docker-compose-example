@@ -3,9 +3,7 @@ version: '2.4'
 services:
   server:
     build: ./server
-    command: /usr/src/app/node_modules/.bin/nodemon server.js
-    volumes:
-      - ./server/:/usr/src/app
+    restart: unless-stopped
     ports:
       - "8080:8080"
     depends_on:
@@ -15,24 +13,23 @@ services:
     environment:
       - NODE_ENV=development
 
-  mongo:
-    image: mongo
-    volumes:
-      - data-volume:/data/db
-    ports:
-      - "27017:27017"
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
-
   client:
     build: ./client
-    command: yarn start
-    volumes:
-      - ./client/:/usr/app
+    restart: unless-stopped
     depends_on:
       - server
     ports:
       - "3000:3000"
     stdin_open: true
+
+  mongo:
+    image: mongo
+    volumes:
+      - dev-db:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+
 volumes:
-    data-volume:
+    dev-db:
